@@ -6,7 +6,7 @@
 #    By: ghambrec <ghambrec@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/09 13:35:48 by ghambrec          #+#    #+#              #
-#    Updated: 2025/01/09 13:41:10 by ghambrec         ###   ########.fr        #
+#    Updated: 2025/01/09 14:54:13 by ghambrec         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,7 +37,7 @@ NC = \033[0m
 # ---------- RULES ---------- #
 all: $(NAME)
 
-$(NAME): $(LIBFT_NAME) $(OBJECTS)
+$(NAME): checkMyLibft $(LIBFT_NAME) $(OBJECTS)
 	@echo "$(YELLOW)Compiling $(NAME)$(NC)"
 	@cc $(CFLAGS) $(OBJECTS) $(LIBFT_DIR)/$(LIBFT_NAME) -o $(NAME)
 	@if [ -f $(NAME) ]; then \
@@ -47,6 +47,22 @@ $(NAME): $(LIBFT_NAME) $(OBJECTS)
 	else \
 		echo "$(RED)failed to compile $(NAME)$(NC)"; \
 		exit 1; \
+	fi
+
+checkMyLibft:
+	@if [ -d $(LIBFT_DIR) ]; then \
+		echo "$(GREEN)myLibft exists$(NC)"; \
+	else \
+		curl -L -o $(LIBFT_DIR).zip https://github.com/ghambrec/42-myLibft/archive/refs/heads/master.zip &> /dev/null; \
+		unzip -o $(LIBFT_DIR).zip &> /dev/null; \
+		mv 42-myLibft-master $(LIBFT_DIR); \
+		rm $(LIBFT_DIR).zip; \
+		if [ -d $(LIBFT_DIR) ]; then \
+			echo "$(GREEN)myLibft exists$(NC)"; \
+		else \
+			echo "$(RED)Error downloading myLibft$(NC)"; \
+			exit 1; \
+		fi \
 	fi
 
 # test rule for faster testing (without compiling myLibft again)
