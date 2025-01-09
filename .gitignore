@@ -1,3 +1,5 @@
 pipex
 sources/myLibft/
 objects/
+infile
+outfile
