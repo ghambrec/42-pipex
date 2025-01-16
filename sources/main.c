@@ -6,7 +6,7 @@
 /*   By: ghambrec <ghambrec@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/09 13:27:17 by ghambrec          #+#    #+#             */
-/*   Updated: 2025/01/16 12:33:27 by ghambrec         ###   ########.fr       */
+/*   Updated: 2025/01/16 12:43:44 by ghambrec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,8 @@ void	free_split(char **split)
 	free(orig);
 }
 
-char	*get_path(char *cmd, char **env)
+char	*get_path_base(char **env)
 {
-	char	**paths;
-	char	*half_path;
-	char	*full_path;
-	int		i;
-
 	while (*env != NULL)
 	{
 		if (ft_strncmp(*env, "PATH=", 5) == 0)
@@ -39,8 +34,21 @@ char	*get_path(char *cmd, char **env)
 		env++;
 	}
 	if (*env == NULL)
-		return (NULL);
-	paths = ft_split(*env + 5, ':');
+	{
+		ft_putendl_fd("Error finding PATH", STDERR_FILENO);
+		exit(EXIT_FAILURE);
+	}
+	return (*env + 5);
+}
+
+char	*get_path(char *cmd, char **env)
+{
+	char	**paths;
+	char	*half_path;
+	char	*full_path;
+	int		i;
+
+	paths = ft_split(get_path_base(env), ':');
 	if (!paths)
 		return (NULL);
 	i = 0;
