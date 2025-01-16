@@ -6,7 +6,7 @@
 #    By: ghambrec <ghambrec@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/09 13:35:48 by ghambrec          #+#    #+#              #
-#    Updated: 2025/01/16 12:47:45 by ghambrec         ###   ########.fr        #
+#    Updated: 2025/01/16 12:57:37 by ghambrec         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,6 @@ SOURCES =	main.c helper.c
 # ---------- OBJECTS ---------- #
 OBJECT_DIR = objects
 OBJECTS = $(addprefix $(OBJECT_DIR)/, $(SOURCES:.c=.o))
-OBJECTS_BONUS = $(addprefix $(OBJECT_DIR)/, $(SOURCES_BONUS:.c=.o))
 
 # ---------- COLORS AND STUFF ---------- #
 GREEN = \033[0;32m
@@ -99,18 +98,6 @@ $(OBJECT_DIR)/%.o: %.c | $(OBJECT_DIR)
 $(OBJECT_DIR):
 	@echo "$(YELLOW)Creating $(OBJECT_DIR) directory$(NC)"
 	@mkdir -p $(OBJECT_DIR)
-
-bonus: $(LIBFT_NAME) $(OBJECTS_BONUS)
-	@echo "$(YELLOW)Compiling bonus $(NAME_CHECKER)$(NC)"
-	@cc $(CFLAGS) $(OBJECTS_BONUS) $(LIBFT_DIR)/$(LIBFT_NAME) -o $(NAME_CHECKER)
-	@if [ -f checker ]; then \
-		echo "$(CYAN)--------------------------------------$(NC)"; \
-		echo "$(GREEN)BONUS PROCESS COMPLETED SUCCESSFULLY!$(NC)"; \
-		echo "$(CYAN)--------------------------------------$(NC)"; \
-	else \
-		echo "$(RED)failed to compile bonus$(NAME)$(NC)"; \
-		exit 1; \
-	fi
 
 clean:
 	@echo "$(RED)Cleaning object files$(NC)"
