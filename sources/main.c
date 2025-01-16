@@ -6,7 +6,7 @@
 /*   By: ghambrec <ghambrec@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/09 13:27:17 by ghambrec          #+#    #+#             */
-/*   Updated: 2025/01/16 12:51:30 by ghambrec         ###   ########.fr       */
+/*   Updated: 2025/01/16 13:29:38 by ghambrec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,8 @@ int	main(int argc, char **argv, char **env)
 
 	if (argc != 5 || ft_strlen(argv[2]) == 0 || ft_strlen(argv[3]) == 0)
 	{
-		ft_putendl_fd("Bad arguments! Expection: \
-						./pipex file1 cmd1 cmd2 file2", STDERR_FILENO);
+		ft_putstr_fd("Bad arguments! Expection: ", STDERR_FILENO);
+		ft_putendl_fd("./pipex file1 cmd1 cmd2 file2", STDERR_FILENO);
 		return (EXIT_FAILURE);
 	}
 	error_check = pipe(pipe_fd);
