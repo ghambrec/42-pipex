@@ -6,7 +6,7 @@
 /*   By: ghambrec <ghambrec@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/09 13:27:17 by ghambrec          #+#    #+#             */
-/*   Updated: 2025/01/16 12:08:07 by ghambrec         ###   ########.fr       */
+/*   Updated: 2025/01/16 12:33:27 by ghambrec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ char	*get_path(char *cmd, char **env)
 	while (*env != NULL)
 	{
 		if (ft_strncmp(*env, "PATH=", 5) == 0)
-			break;
+			break ;
 		env++;
 	}
 	if (*env == NULL)
@@ -146,7 +146,7 @@ int	main(int argc, char **argv, char **env)
 	if (argc != 5 || ft_strlen(argv[2]) == 0 || ft_strlen(argv[3]) == 0)
 	{
 		ft_putendl_fd("Bad arguments! Expection: ./pipex file1 cmd1 cmd2 file2", STDERR_FILENO);
-		return (EXIT_FAILURE);	
+		return (EXIT_FAILURE);
 	}
 	error_check = pipe(pipe_fd);
 	if (error_check == -1)
