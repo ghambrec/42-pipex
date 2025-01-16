@@ -6,7 +6,7 @@
 /*   By: ghambrec <ghambrec@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/09 13:27:17 by ghambrec          #+#    #+#             */
-/*   Updated: 2025/01/16 11:37:38 by ghambrec         ###   ########.fr       */
+/*   Updated: 2025/01/16 12:08:07 by ghambrec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,9 @@ void	exec_cmd(char *cmd, char **env)
 	path = get_path(args[0], env);
 	if (!path)
 	{
+		ft_putstr_fd("Command not found: ", STDERR_FILENO);
+		ft_putendl_fd(args[0], STDERR_FILENO);
 		free_split(args);
-		ft_putendl_fd("Could not find the program", STDERR_FILENO);
 		exit(EXIT_FAILURE);
 	}
 	if (execve(path, args, env) == -1)
@@ -80,11 +81,11 @@ void	exec_cmd(char *cmd, char **env)
 		ft_putstr_fd(args[0], STDERR_FILENO);
 		perror(" ");
 		free_split(args);
-		exit(EXIT_FAILURE);
+		exit(errno);
 	}
 }
 
-void	child(char *infile, char *cmd, int *pipefd, char **env)
+void	child(char *infile, char *cmd, int *pipe_fd, char **env)
 {
 	int	infile_fd;
 
@@ -92,55 +93,73 @@ void	child(char *infile, char *cmd, int *pipefd, char **env)
 	if (infile_fd == -1)
 	{
 		perror("Error opening infile");
-		exit(EXIT_FAILURE);
+		exit(errno);
 	}
-	dup2(infile_fd, STDIN_FILENO);
+	if (dup2(infile_fd, STDIN_FILENO) == -1)
+	{
+		perror("Error dup2 infile_fd to stdin");
+		exit(errno);
+	}
 	close(infile_fd);
-	dup2(pipefd[1], STDOUT_FILENO);
-	close(pipefd[0]);
-	close(pipefd[1]);
+	if (dup2(pipe_fd[1], STDOUT_FILENO) == -1)
+	{
+		perror("Error dup2 pipe_fd to stdout");
+		exit(errno);
+	}
+	close(pipe_fd[0]);
+	close(pipe_fd[1]);
 	exec_cmd(cmd, env);
 }
 
-void	parent(char *outfile, char *cmd, int *pipefd, char **env)
+void	parent(char *outfile, char *cmd, int *pipe_fd, char **env)
 {
 	int	outfile_fd;
 
 	outfile_fd = open(outfile, O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	if (outfile_fd == -1)
 	{
-		ft_printf("Error opening outfile");
+		perror("Error opening outfile");
 		exit(EXIT_FAILURE);
 	}
-	// dup2(outfile_fd, STDOUT_FILENO); //for testing print in the terminal not in the file
+	if (dup2(outfile_fd, STDOUT_FILENO) == -1)
+	{
+		perror("Error dup2 outfile_fd to stdout");
+		exit(errno);
+	}
 	close(outfile_fd);
-	dup2(pipefd[0], STDIN_FILENO);
-	close(pipefd[0]);
-	close(pipefd[1]);
+	if (dup2(pipe_fd[0], STDIN_FILENO) == -1)
+	{
+		perror("Error dup2 pipe_fd to stdin");
+		exit(errno);
+	}
+	close(pipe_fd[0]);
+	close(pipe_fd[1]);
 	exec_cmd(cmd, env);
 }
 
 int	main(int argc, char **argv, char **env)
 {
-	int	pipefd[2];
+	int	pipe_fd[2];
 	int	error_check;
 	int	pid1;
 
-	if (argc != 5)
+	if (argc != 5 || ft_strlen(argv[2]) == 0 || ft_strlen(argv[3]) == 0)
 	{
 		ft_putendl_fd("Bad arguments! Expection: ./pipex file1 cmd1 cmd2 file2", STDERR_FILENO);
 		return (EXIT_FAILURE);	
 	}
-	error_check = pipe(pipefd);
+	error_check = pipe(pipe_fd);
 	if (error_check == -1)
-		return (perror("Error opening pipe"), EXIT_FAILURE);
+		return (perror("Error opening pipe"), errno);
 	pid1 = fork();
 	if (pid1 < 0)
-		return (perror("Error opening child-process"), EXIT_FAILURE);
+		return (perror("Error opening child-process"), errno);
 	if (pid1 == 0)
 	{
-		child(argv[1], argv[2], pipefd, env);
+		child(argv[1], argv[2], pipe_fd, env);
 	}
-	parent(argv[4], argv[3], pipefd, env);
-	waitpid(pid1, NULL, 0);
+	parent(argv[4], argv[3], pipe_fd, env);
+	if (waitpid(pid1, NULL, 0) == -1)
+		return (perror("Error waiting for child-process"), errno);
+	return (0);
 }
