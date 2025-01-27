@@ -6,7 +6,7 @@
 #    By: ghambrec <ghambrec@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/09 13:35:48 by ghambrec          #+#    #+#              #
-#    Updated: 2025/01/27 13:10:13 by ghambrec         ###   ########.fr        #
+#    Updated: 2025/01/27 13:31:05 by ghambrec         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -64,26 +64,13 @@ checkMyLibft:
 		fi \
 	fi
 
-# test rule for faster testing (without compiling myLibft again)
-test: $(OBJECTS)
-	@echo "$(YELLOW)\nCompiling $(NAME)$(NC)"
-	@cc $(CFLAGS) $(OBJECTS) $(LIBFT_DIR)/$(LIBFT_NAME) -o $(NAME)
-	@if [ -f $(NAME) ]; then \
-		echo "$(CYAN)--------------------------------------$(NC)"; \
-		echo "$(GREEN)BUILD PROCESS COMPLETED SUCCESSFULLY!$(NC)"; \
-		echo "$(CYAN)--------------------------------------$(NC)"; \
-	else \
-		echo "$(RED)failed to compile $(NAME)$(NC)"; \
-		exit 1; \
-	fi
-
-# exec test without flags
-testnf: CFLAGS = -I $(INCLUDE_DIR)
-testnf: test
+# test rule - compile without flags
+test: CFLAGS = -I $(INCLUDE_DIR)
+test: $(NAME)
 
 $(LIBFT_NAME):
 	@echo "$(YELLOW)Creating $(LIBFT_NAME)$(NC)"
-	@make re -C $(LIBFT_DIR) > $(LIBFT_DIR)/make_log.txt
+	@make -C $(LIBFT_DIR) > $(LIBFT_DIR)/make_log.txt
 	@if [ -f $(LIBFT_DIR)/$(LIBFT_NAME) ]; then \
 		echo "$(GREEN)$(LIBFT_NAME) successfully created$(NC)"; \
 	else \
