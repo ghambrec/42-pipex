@@ -6,7 +6,7 @@
 #    By: ghambrec <ghambrec@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/09 13:35:48 by ghambrec          #+#    #+#              #
-#    Updated: 2025/01/16 12:57:37 by ghambrec         ###   ########.fr        #
+#    Updated: 2025/01/27 13:10:13 by ghambrec         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -107,7 +107,9 @@ fclean: clean
 	@echo "$(RED)Removing $(NAME)$(NC)"
 	@rm -f $(NAME)
 	@rm -f $(NAME_CHECKER)
-	@make fclean -C $(LIBFT_DIR)
+	@if [ -d $(LIBFT_DIR) ]; then \
+		make fclean -C $(LIBFT_DIR); \
+	fi
 
 re: fclean all
 
