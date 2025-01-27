@@ -6,7 +6,7 @@
 /*   By: ghambrec <ghambrec@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/09 13:27:17 by ghambrec          #+#    #+#             */
-/*   Updated: 2025/01/16 13:29:38 by ghambrec         ###   ########.fr       */
+/*   Updated: 2025/01/27 13:17:04 by ghambrec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,5 +89,5 @@ int	main(int argc, char **argv, char **env)
 	parent(argv[4], argv[3], pipe_fd, env);
 	if (waitpid(pid1, NULL, 0) == -1)
 		return (perror("Error waiting for child-process"), errno);
-	return (0);
+	return (EXIT_SUCCESS);
 }
