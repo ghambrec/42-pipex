@@ -52,8 +52,8 @@ checkMyLibft:
 	@if [ -d $(LIBFT_DIR) ]; then \
 		echo "$(GREEN)myLibft exists$(NC)"; \
 	else \
-		curl -L -o $(LIBFT_DIR).zip https://github.com/ghambrec/42-myLibft/archive/refs/heads/master.zip &> /dev/null; \
-		unzip -o $(LIBFT_DIR).zip &> /dev/null; \
+		curl -L -o $(LIBFT_DIR).zip https://github.com/ghambrec/42-myLibft/archive/refs/heads/master.zip > /dev/null 2>&1; \
+		unzip -o $(LIBFT_DIR).zip > /dev/null 2>&1; \
 		mv 42-myLibft-master $(LIBFT_DIR); \
 		rm $(LIBFT_DIR).zip; \
 		if [ -d $(LIBFT_DIR) ]; then \
